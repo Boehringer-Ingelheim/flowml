@@ -1,0 +1,137 @@
+Package: flowml
+Type: Package
+Title: flowml
+Version: 0.1.1
+Authors@R: c(
+    person("Sebastian", "Malkusch",
+      email = "sebastian.malkusch@boehringer-ingelheim.com",
+      role = c("aut", "cre"),
+      comment = c(ORCID = "https://orcid.org/0000-0001-6766-140X")
+    ),
+    person("Kolja", "Becker",
+      email = "kolja.becker@boehringer-ingelheim.com",
+      role = c("aut"),
+      comment = c(ORCID = "")
+    ),
+    person("Alexander", "Peltzer",
+      email = "alexander.peltzer@boehringer-ingelheim.com",
+      role = c("ctb"),
+      comment = c(ORCID = "https://orcid.org/0009-0005-6021-4291")
+    ),
+    person("Neslihan", "Kaya",
+      email = "neslihan.kaya@boehringer-ingelheim.com"
+      role = c("ctb"),
+      comment = c(ORCID = "")
+    ),
+    person(
+      "Boehringer Ingelheim Ltd.",
+      role = c("cph", "fnd")
+    )
+  )
+Maintainer: Sebastian Malkusch <"sebastian.malkusch@boehringer-ingelheim.com">
+Description: nextflow pipeline for ml-based analyses
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    ABCanalysis,
+    ada,
+    adabag,
+    arm,
+    bartMachine,
+    bst,
+    C50,
+    caret,
+    caTools,
+    class,
+    Cubist,
+    data.table,
+    dplyr,
+    e1071,
+    earth,
+    elasticnet,
+    evtree,
+    fastICA,
+    fastshap,
+    foreach,
+    frbs,
+    furrr,
+    future,
+    gam,
+    gbm,
+    ggplot2,
+    glmnet,
+    gpls,
+    h2o,
+    hda,
+    ipred,
+    keras,
+    kernlab,
+    kknn,
+    klaR,
+    kohonen,
+    lars,
+    leaps,
+    LiblineaR,
+    LogicReg,
+    magrittr,
+    MASS,
+    Matrix,
+    mboost,
+    mda,
+    mgcv,
+    monomvn,
+    neuralnet,
+    nnet,
+    nnls,
+    optparse,
+    pamr,
+    parallel,
+    partDSA,
+    party,
+    partykit,
+    penalized,
+    penalizedLDA,
+    pls,
+    plyr,
+    proxy,
+    purrr,
+    quantregForest,
+    R6,
+    randomForest,
+    ranger,
+    readr,
+    rFerns,
+    rjson,
+    rlang,
+    rpart,
+    rrcov,
+    rrcovHD,
+    rsample,
+    RSNNS,
+    RWeka,
+    sda,
+    spls,
+    stats,
+    stringr,
+    superpc,
+    tibble,
+    tidyr,
+    utils,
+    vbmp,
+    VGAM,
+    vip,
+    xgboost
+RoxygenNote: 7.2.3
+Collate: 
+    'fml_resampler.R'
+    'fml_resample.R'
+    'fml_format_response.R'
+    'fml_parser.R'
+    'fml_bootstrap.R'
+    'fml_categorize.R'
+    'fml_globals.R'
+    'fml_grids.R'
+    'fml_interpret.R'
+    'fml_train.R'
+    'fml_validate.R'
