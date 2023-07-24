@@ -17,12 +17,9 @@
 #' @include fml_format_response.R
 #' @include fml_categorize.R
 #'
-#' @keywords model interpretation, feature importance, item categorization
-#'
-#' @examples
+#' #' @examples
 #' \dontrun{
-#'   Rscript fml_interpret.R --config /path/to/config.json --data /path/to/data.csv --samples /path/to/samples_train.txt --features path/to/features.txt --trained /path/to/trained_model.rds --interpretation shap --cores 1
-#'   Rscript fml_interpret.R --config /path/to/config.json --data /path/to/data.csv --samples /path/to/samples_train.txt --features path/to/features.txt --trained /path/to/trained_model.rds --interpretation permutation --cores 1
+#'   flowml::fml_interpret(parser_inst)
 #' }
 #'
 #' @export

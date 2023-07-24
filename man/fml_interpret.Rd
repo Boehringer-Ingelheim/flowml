@@ -10,19 +10,6 @@ fml_interpret()
 Pipeline function that sets up and runs a post-hoc interpretation of an ml experiment.
 All results are written to rds files.
 }
-\examples{
-\dontrun{
-  Rscript fml_interpret.R --config /path/to/config.json --data /path/to/data.csv --samples /path/to/samples_train.txt --features path/to/features.txt --trained /path/to/trained_model.rds --interpretation shap --cores 1
-  Rscript fml_interpret.R --config /path/to/config.json --data /path/to/data.csv --samples /path/to/samples_train.txt --features path/to/features.txt --trained /path/to/trained_model.rds --interpretation permutation --cores 1
-}
-
-}
 \author{
 Sebastian Malkusch
 }
-\keyword{categorization}
-\keyword{feature}
-\keyword{importance,}
-\keyword{interpretation,}
-\keyword{item}
-\keyword{model}

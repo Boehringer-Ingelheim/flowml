@@ -15,47 +15,9 @@ For each experiment multiple metrics are measured.
 For classification experiments the confusion matrix is calculated additionally.
 In order to test hypotheses, either features or the response variable can be permuted.
 }
-\examples{
-\dontrun{
-  library("caret")
-  data(iris)
-
-  iris_df <- iris
-
-  trControl = caret::trainControl(
-    method = "repeatedcv",
-    number = 5,
-    repeats = 10)
-
-  cv_model = caret::train(
-    y = iris_df$Species,
-    x = dplyr::select(iris_df, -Species),
-    method = "ranger",
-    preProcess = c('scale', 'center'),
-    trControl = trControl,
-    tuneGrid = NULL, # NOTE: if NULL tuneLength is used
-    tuneLength = 10)
-
-  resampler_inst = Resampler$new(permute = "response",
-                                 n_resample = 5,
-                                 fml_method = "ranger",
-                                 fml_type = "classification",
-                                 hyper_parameters = cv_model$bestTune,
-                                 pre_process_lst = c('scale', 'center'),
-                                 response_var = "Species",
-                                 n_features = 4,
-                                 strata_var = NULL)#config_inst$ml.bootstrap$strata_var
-
-  resampler_inst$fit(data_df = iris_df)
-}
-
-
-}
 \author{
 Sebastian Malkusch
 }
-\keyword{hypotheses}
-\keyword{validation,}
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{

@@ -21,17 +21,10 @@ All results are written to files.
 }
 \examples{
 \dontrun{
-  Rscript fml_bootstrap.R --config /path/to/config.json --data /path/to/data.csv --samples /path/to/samples_train.txt --features path/to/features.txt --trained /path/to/trained_model.rds --permutation none --cores 1
-  Rscript fml_bootstrap.R --config /path/to/config.json --data /path/to/data.csv --samples /path/to/samples_train.txt --features path/to/features.txt --trained /path/to/trained_model.rds --permutation response --cores 1
-  Rscript fml_bootstrap.R --config /path/to/config.json --data /path/to/data.csv --samples /path/to/samples_train.txt --features path/to/features.txt --trained /path/to/trained_model.rds --permutation features --cores 1 --extended_features /path/to/extended_features.txt
+  flowml::fml_bootstrap(parser_inst)
 }
 
 }
 \author{
 Sebastian Malkusch
 }
-\keyword{bootstrap,}
-\keyword{hypothesis}
-\keyword{permutation,}
-\keyword{resmapling,}
-\keyword{testing}

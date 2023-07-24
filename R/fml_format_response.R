@@ -2,11 +2,10 @@
 #' @author Kolja Becker
 #' @title format_y
 #' @description Formats response variable based on the ml-type variable passed by the config file.
-#' For regression analyses the response variable will be explicitly transformed to type numeric. 
+#' For regression analyses the response variable will be explicitly transformed to type numeric.
 #' For Classification experiments the response variable will be explicitly transformed to a factor.
 #' Time-to-event models are to be implemented in the near future.
-#' 
-#' @keywords pre-processing, transformation
+#'
 #' @param y vector of response varibale.
 #' @param ml.type type of experiment (chracater).
 #' @return a transformed version of the response variable y.

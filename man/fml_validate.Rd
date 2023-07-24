@@ -18,15 +18,10 @@ a caret train object based on test samples.
 }
 \examples{
 \dontrun{
-  Rscript fml_interpret.R --config /path/to/config.json --data /path/to/data.csv --samples /path/to/samples_train.txt --features path/to/features.txt --trained /path/to/trained_model.rds --interpretation shap --cores 1
-  Rscript fml_interpret.R --config /path/to/config.json --data /path/to/data.csv --samples /path/to/samples_train.txt --features path/to/features.txt --trained /path/to/trained_model.rds --interpretation permutation --cores 1
+  flowml::fml_validate(parser_inst)
 }
 
 }
 \author{
 Kolja Becker
 }
-\keyword{data}
-\keyword{model}
-\keyword{test}
-\keyword{validation,}

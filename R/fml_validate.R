@@ -18,12 +18,9 @@
 #' @param parser_inst instance of fml_parser class that comprises command line arguments.
 #' @return none
 #'
-#' @keywords model validation, test data
-#'
 #' @examples
 #' \dontrun{
-#'   Rscript fml_interpret.R --config /path/to/config.json --data /path/to/data.csv --samples /path/to/samples_train.txt --features path/to/features.txt --trained /path/to/trained_model.rds --interpretation shap --cores 1
-#'   Rscript fml_interpret.R --config /path/to/config.json --data /path/to/data.csv --samples /path/to/samples_train.txt --features path/to/features.txt --trained /path/to/trained_model.rds --interpretation permutation --cores 1
+#'   flowml::fml_validate(parser_inst)
 #' }
 #'
 #' @export

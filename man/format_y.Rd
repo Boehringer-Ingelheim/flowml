@@ -16,12 +16,10 @@ a transformed version of the response variable y.
 }
 \description{
 Formats response variable based on the ml-type variable passed by the config file.
-For regression analyses the response variable will be explicitly transformed to type numeric. 
+For regression analyses the response variable will be explicitly transformed to type numeric.
 For Classification experiments the response variable will be explicitly transformed to a factor.
 Time-to-event models are to be implemented in the near future.
 }
 \author{
 Kolja Becker
 }
-\keyword{pre-processing,}
-\keyword{transformation}

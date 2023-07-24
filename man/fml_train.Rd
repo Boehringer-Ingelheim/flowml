@@ -14,15 +14,10 @@ Pipeline function that performs a hyperparameter screeing experiment.
 }
 \examples{
 \dontrun{
-  Rscript fml_interpret.R --config /path/to/config.json --data /path/to/data.csv --samples /path/to/samples_train.txt --features path/to/features.txt --trained /path/to/trained_model.rds --interpretation shap --cores 1
-  Rscript fml_interpret.R --config /path/to/config.json --data /path/to/data.csv --samples /path/to/samples_train.txt --features path/to/features.txt --trained /path/to/trained_model.rds --interpretation permutation --cores 1
+  flowml::fml_train(parser_inst)
 }
 
 }
 \author{
 Kolja Becker
 }
-\keyword{hyperparameter}
-\keyword{model}
-\keyword{training}
-\keyword{tuning,}

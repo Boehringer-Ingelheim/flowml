@@ -1,4 +1,4 @@
-#' @name fml_parser
+#' @name create_parser
 #' @author Sebastian Malkusch
 #' @title create_parser
 #' @description Creates an object that defines and handles command line arguments.
@@ -11,7 +11,7 @@
 #'
 #' @export
 #'
-fml_parser = function(){
+create_parser = function(){
   option_list = list(
     optparse::make_option("--pipeline_segment", type = "character", default=NULL,
                           help="pipeline segment to run. Opeions are: train,
