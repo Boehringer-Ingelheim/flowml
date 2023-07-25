@@ -3,3 +3,6 @@
 ^LICENSE\.md$
 ^add_packages\.R$
 ^flowml\.R$
+^make_test_data\.ipynb$
+^data$
+^regression\.Rmd$

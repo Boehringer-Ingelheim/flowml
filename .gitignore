@@ -2,4 +2,9 @@
 .Rhistory
 .RData
 .Ruserdata
+.json
+.csv
+.txt
+.rds
+.log
 inst/doc

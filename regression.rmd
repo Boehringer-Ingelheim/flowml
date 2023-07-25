@@ -1,0 +1,190 @@
+---
+title: "regression"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{regression}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+#library("flowml")
+library("tidyverse")
+library("shapviz")
+devtools::load_all()
+```
+
+# Parse Command Line Arguments
+
+The parser is usually filled by command line arguments using the flowml::create_parser() function. Here we will fill it by hand for the purpose of demonstration.
+
+```{r parser}
+parser_inst <-  flowml::create_parser()
+parser_inst$pipeline_segment <- "train"
+parser_inst$config <- "data/reg_config.json"
+parser_inst$data <- "data/reg_data.csv"
+parser_inst$samples_train <- "data/reg_samples_train.txt"
+parser_inst$samples_test <- "data/reg_samples_test.txt"
+parser_inst$features <- "data/reg_features.txt"
+parser_inst$extended_features <- "data/reg_features_extended.txt"
+parser_inst$permutation <- "none"
+parser_inst$interpretation <- "shap"
+parser_inst$trained <- "NULL"
+parser_inst$cores <- "1"
+parser_inst$result_dir <- "data/results"
+```
+
+Now lets train the model.
+
+```{r}
+flowml::fml_train(parser_inst)
+```
+
+# Model analysis
+
+Lets analyze the optimal trained model:
+
+```{r}
+parser_inst$trained <- "data/results/testFitRegression.rds"
+```
+
+First we will perform a bootstrap resampling test on the training data.
+
+```{r}
+parser_inst$permutation <- "none"
+flowml::fml_bootstrap(parser_inst)
+```
+Lets plot the results of the Bootstrap-based resampling experiment without permutation
+
+```{r}
+readr::read_csv("data/results/testFitRegression_permute_none_bootstrap_metrics.csv") %>%
+  dplyr::select(-dplyr::all_of(c("permutation_type", "permutations", "Resample"))) %>%
+  tidyr::pivot_longer(cols = c("RMSE", "Rsquared", "MAE"), names_to = "metrics") %>%
+  ggplot2::ggplot(mapping = ggplot2::aes(x=value)) +
+  ggplot2::geom_density() +
+  ggplot2::facet_wrap(facets = "metrics", scales = "free")
+```
+
+# Null-Hypotheses
+
+## Test against response
+
+Lets test if the correlation with the response variable can be due to chance. Therfore, we will permute the response variable and subsequently perform a Bootstrap-based resampling experiment
+
+```{r}
+parser_inst$permutation <- "response"
+flowml::fml_bootstrap(parser_inst)
+```
+
+Lets plot the result
+
+```{r}
+readr::read_csv("data/results/testFitRegression_permute_response_bootstrap_metrics.csv") %>%
+  dplyr::select(-dplyr::all_of(c("permutation_type", "permutations", "Resample"))) %>%
+  tidyr::pivot_longer(cols = c("RMSE", "Rsquared", "MAE"), names_to = "metrics") %>%
+  ggplot2::ggplot(mapping = ggplot2::aes(x=value)) +
+  ggplot2::geom_density() +
+  ggplot2::facet_wrap(facets = "metrics", scales = "free")
+```
+
+## Test against feature set
+
+Lets test if the correlation with the response variable is related to the selected feature set. Therefore, we will create random features sets from the selected features and the extended feature set without replacement. The new feature set will have the same size as the original one.
+
+```{r}
+parser_inst$extended_features <- "data/reg_features_extended.txt"
+parser_inst$permutation <- "features"
+flowml::fml_bootstrap(parser_inst)
+```
+
+Lets plot the result
+
+```{r}
+readr::read_csv("data/results/testFitRegression_permute_features_bootstrap_metrics.csv") %>%
+  dplyr::select(-dplyr::all_of(c("permutation_type", "permutations", "Resample"))) %>%
+  tidyr::pivot_longer(cols = c("RMSE", "Rsquared", "MAE"), names_to = "metrics") %>%
+  ggplot2::ggplot(mapping = ggplot2::aes(x=value)) +
+  ggplot2::geom_density() +
+  ggplot2::facet_wrap(facets = "metrics", scales = "free")
+```
+
+# Feature Importance
+
+Lets calculate the shap values to see if the model can identify the important features.
+
+```{r}
+parser_inst$interpretation <- "shap"
+flowml::fml_interpret(parser_inst)
+```
+
+Lets plot the results
+
+```{r}
+shap_inst <- readRDS("data/results/shap_interpretation_testFitRegression.rds")
+shap_inst$catrgorization %>%
+  dplyr::arrange(Importance) %>%
+  dplyr::mutate(Feature = factor(Feature, levels = unique(Feature))) %>%
+  ggplot2::ggplot(mapping = ggplot2::aes(x=Importance, y=Feature, fill = abc_analysis)) +
+  ggplot2::geom_col()
+```
+Lets Compare to the true importance
+
+```{r}
+readr::read_csv("data/reg_coef.csv") %>%
+  dplyr::filter(features %in% unique(shap_inst$catrgorization$Feature)) %>%
+  dplyr::arrange(coef) %>%
+  dplyr::mutate(features = factor(features, levels = unique(features))) %>%
+  ggplot2::ggplot(mapping = ggplot2::aes(x=coef, y=features)) +
+  ggplot2::geom_col()
+```
+
+Lets calucalte the impact of the individual feature values on the response of a specific subject using SHAP.
+
+```{r}
+data_df <- readr::read_csv("data/reg_data.csv")
+baseline <- mean(data_df$response)
+important_genes <- colnames(shap_inst$interpretation)
+shap_data <- data_df %>%
+  dplyr::select(dplyr::all_of(important_genes))
+subject_of_interest <- 1
+subject_shap_inst <- shapviz::shapviz(
+  object =  shap_inst$interpretation[subject_of_interest, ],
+  X = shap_data[subject_of_interest, ],
+  baseline= baseline
+  )
+```
+
+We can plot the result either as waterfall plot:
+
+```{r}
+shapviz::sv_waterfall(subject_shap_inst)
+```
+
+Or we can plot is as force plot:
+
+```{r}
+shapviz::sv_force(subject_shap_inst)
+```
+
+# Final Validation
+
+Finally, we will validate the trained model on the test data.
+
+```{r}
+parser_inst$trained <- "data/results/testFitRegression.rds"
+flowml::fml_validate(parser_inst)
+```
+
+Lets have a look at the results
+
+```{r}
+readr::read_csv("data/results/testFitRegression_eval.csv")
+```
+

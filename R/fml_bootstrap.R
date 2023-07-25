@@ -112,9 +112,12 @@ fml_bootstrap = function(parser_inst){
     tidyr::unnest(metrics)
 
   # This result will go to the multiQC section
-  path_to_metrics_file <- sprintf("./%s_permute_%s_bootstrap_metrics.csv", config_inst$fit.id,  parser_inst$permutation)
-  readr::write_csv(metrics_df, path_to_metrics_file)
+  path_to_metrics_file <- sprintf("%s/%s_permute_%s_bootstrap_metrics.csv",
+                                  parser_inst$result_dir,
+                                  config_inst$fit.id,
+                                  parser_inst$permutation)
 
+  readr::write_csv(metrics_df, path_to_metrics_file)
 
   # write confusion
   if(config_inst$ml.type == "classification"){
@@ -122,7 +125,11 @@ fml_bootstrap = function(parser_inst){
       dplyr::select(permutation_type, permutations, seed, confusion) %>%
       tidyr::unnest(confusion)
     # This result will go to the multiQC section
-    path_to_confusion_file <- sprintf("./%s_permute_%s_bootstrap_confusion.csv", config_inst$fit.id,  parser_inst$permutation)
+    path_to_confusion_file <- sprintf("%s/%s_permute_%s_bootstrap_confusion.csv",
+                                      parser_inst$result_dir,
+                                      config_inst$fit.id,
+                                      parser_inst$permutation)
+
     readr::write_csv(confusion_df, path_to_confusion_file)
   }
 
@@ -138,29 +145,32 @@ fml_bootstrap = function(parser_inst){
     extended_features_file <- parser_inst$extended_features
   }
 
-  file.log = sprintf("./%s_permute_%s_bootstrap.log", config_inst$fit.id,  parser_inst$permutation)
-  data.frame(
-    name.out = config_inst$fit.id,
-    file.data = parser_inst$data,
-    file.samples.train = parser_inst$samples,
-    file.features.train = parser_inst$features,
-    file.features.resample = extended_features_file,
-    ml.model = parser_inst$trained,
-    ml.seed = config_inst$ml.seed,
-    ml.type = config_inst$ml.type,
-    ml.method = config_inst$ml.method,
-    ml.response = config_inst$ml.response,
-    ml.preProcess = stringr::str_flatten(config_inst$ml.preprocess, collapse = "; "),
-    boot.permutation.method = parser_inst$permutation,
-    boot.n.resamples = config_inst$ml.bootstrap$n.resamples,
-    boot.n.permutations = config_inst$ml.bootstrap$n.permutations,
-    boot.n.cores = parser_inst$cores,
-    boot.run_time = sprintf("%.3f", run_time),
-    note.log = config_inst$note) %>%
-    t() %>%
-    utils::write.table(file.log, row.names = TRUE, quote = FALSE, col.names = FALSE, sep='\t')
+  file.log = sprintf("%s/%s_permute_%s_bootstrap.log",
+                     parser_inst$result_dir,
+                     config_inst$fit.id,
+                     parser_inst$permutation)
+
+  list(name.out = config_inst$fit.id,
+       file.data = parser_inst$data,
+       file.samples.train = parser_inst$samples,
+       file.features.train = parser_inst$features,
+       file.features.resample = extended_features_file,
+       ml.model = parser_inst$trained,
+       ml.seed = config_inst$ml.seed,
+       ml.type = config_inst$ml.type,
+       ml.method = config_inst$ml.method,
+       ml.response = config_inst$ml.response,
+       ml.preProcess = stringr::str_flatten(config_inst$ml.preprocess, collapse = "; "),
+       boot.permutation.method = parser_inst$permutation,
+       boot.n.resamples = config_inst$ml.bootstrap$n.resamples,
+       boot.n.permutations = config_inst$ml.bootstrap$n.permutations,
+       boot.n.cores = parser_inst$cores,
+       boot.run_time = sprintf("%.3f", run_time),
+       note.log = config_inst$note) %>%
+    rjson::toJSON() %>%
+    write(file = file.log)
 
   # closing remarks
-  cat(sprintf("\n\nRan bootstrap experiment with permutation type %s in %.3f seconds on %i cores.\n%s\n", parser_inst$permutation, run_time, parser_inst$cores, config_inst$note))
+  cat(sprintf("\n\nRan bootstrap experiment with permutation type %s in %.3f seconds on %i cores.\n%s\n", parser_inst$permutation, run_time, as.numeric(parser_inst$cores), config_inst$note))
 }
 

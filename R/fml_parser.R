@@ -35,7 +35,9 @@ create_parser = function(){
     optparse::make_option("--trained", type="character", default = NULL,
                           help = "trained caret object (*.rds).", metavar="character"),
     optparse::make_option("--cores", type="integer", default=1,
-                          help="available cores for multi-processing [default= %default]", metavar="character")
+                          help="available cores for multi-processing [default= %default]", metavar="character"),
+    optparse::make_option("--result_dir", type="character", default = NULL,
+                          help="directory to store results")
   )
 
   opt_parser = optparse::OptionParser(option_list=option_list)

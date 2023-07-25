@@ -4,11 +4,20 @@
 \alias{fml_interpret}
 \title{fml_interpret}
 \usage{
-fml_interpret()
+fml_interpret(parser_inst)
+}
+\arguments{
+\item{parser_inst}{instance of fml_parser class that comprises command line arguments.}
 }
 \description{
 Pipeline function that sets up and runs a post-hoc interpretation of an ml experiment.
 All results are written to rds files.
+}
+\examples{
+\dontrun{
+  flowml::fml_interpret(parser_inst)
+}
+
 }
 \author{
 Sebastian Malkusch

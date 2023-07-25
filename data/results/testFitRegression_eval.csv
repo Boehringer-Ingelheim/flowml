@@ -1,0 +1,2 @@
+test_data,RMSE,Rsquared,MAE
+../data/reg_samples_test.txt,18.4297435465379,0.980626173468844,14.6369990290823

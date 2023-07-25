@@ -133,9 +133,9 @@ Suggests:
     RSNNS,
     RWeka,
     sda,
+    shapviz,
     spls,
     superpc,
     vbmp,
     VGAM,
     xgboost
-VignetteBuilder: knitr

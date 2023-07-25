@@ -17,17 +17,16 @@
 #' @include fml_format_response.R
 #' @include fml_categorize.R
 #'
-#' #' @examples
+#' @param parser_inst instance of fml_parser class that comprises command line arguments.
+#'
+#' @examples
 #' \dontrun{
 #'   flowml::fml_interpret(parser_inst)
 #' }
 #'
 #' @export
 #'
-fml_interpret = function(){
-  # get command line arguments
-  parser_inst <- create_parser()
-
+fml_interpret = function(parser_inst){
   # read config
   config_inst <- rjson::fromJSON(file = parser_inst$config)
 
@@ -83,7 +82,7 @@ fml_interpret = function(){
                                                 nsim = fml_resamples,
                                                 X = as.data.frame(dplyr::select(filtered_df, dplyr::all_of(train_features_lst))),
                                                 newdata = NULL,
-                                                adjust = FALSE) %>%
+                                                adjust = TRUE) %>%
                                 return()
                             },
                             stop(sprintf("Interpretation method %s is unknown. Needs to be permutation or shap.", parser_inst$interpretation))
@@ -95,6 +94,10 @@ fml_interpret = function(){
   # save results to the multiQC section
   result_obj <- list("interpretation" = interpret_inst, "catrgorization" = categorize_df)
 
-  path_to_result <- sprintf("./%s_interpretation_%s.rds", parser_inst$interpretation, config_inst$fit.id)
+  path_to_result <- sprintf("%s/%s_interpretation_%s.rds",
+                            parser_inst$result_dir,
+                            parser_inst$interpretation,
+                            config_inst$fit.id)
+
   saveRDS(result_obj, file = path_to_result)
 }

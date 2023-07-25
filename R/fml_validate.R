@@ -6,7 +6,7 @@
 #'
 #' @importFrom dplyr bind_rows
 #' @importFrom rjson fromJSON
-#' @importFrom data.table fread fwrite
+#' @importFrom data.table data.table fread fwrite
 #' @importFrom tibble column_to_rownames
 #' @importFrom caret postResample train trainControl
 #' @importFrom utils read.csv
@@ -36,7 +36,6 @@ fml_validate = function(parser_inst){
   config = rjson::fromJSON(file = file.config)
 
   # load trained model
-  #file.rds = paste0('./fits/', config$fit.id, '.rds')
   cv_model = readRDS(file.trained_model)
 
   # data
@@ -50,7 +49,7 @@ fml_validate = function(parser_inst){
   # prepare list with test samples
   list.test = lapply(list.samples.test, function(x)
     # read in samples test
-    utils::read.csv(x, header = F)$V1) %>%
+    utils::read.csv(x, header = FALSE)$V1) %>%
     # assign names
     magrittr::set_names(lapply(list.samples.test, function(x) x))
 
@@ -63,9 +62,10 @@ fml_validate = function(parser_inst){
     # performance evaluation
     caret::postResample(y.model, y.data)}) %>%
     dplyr::bind_rows(.id='test_data') %>%
-    data.table
+    data.table::data.table()
 
   # write output
-  data.table::fwrite(df.eval, paste0('./', config$fit.id, '_eval.csv'))
+  path_to_eval_result = sprintf("%s/%s_eval.csv", parser_inst$result_dir, config$fit.id)
+  data.table::fwrite(df.eval, path_to_eval_result)
 
 }
