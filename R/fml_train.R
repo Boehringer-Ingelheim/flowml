@@ -1,7 +1,7 @@
 #' @name fml_train
 #' @author Kolja Becker
 #' @title fml_train
-#' @description Pipeline function that performs a hyperparameter screeing experiment.
+#' @description Pipeline function that performs a hyper-parameter screeing experiment.
 #'
 #' @importFrom rjson fromJSON
 #' @importFrom data.table fread

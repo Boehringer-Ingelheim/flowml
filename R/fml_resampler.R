@@ -179,7 +179,7 @@ Resampler = R6::R6Class("Resampler",
                           #' ML model that is being used.
                           #' The default is 'pcr' (character).
                           #' @param fml_type
-                          #' ML model type. Needs to be 'classfification',
+                          #' ML model type. Needs to be 'classification',
                           #' 'regression' or 'censored'.
                           #' Default is 'classification' (character).
                           #' @param hyper_parameters

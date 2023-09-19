@@ -10,7 +10,7 @@ fml_train(parser_inst)
 \item{parser_inst}{instance of fml_parser class that comprises command line arguments.}
 }
 \description{
-Pipeline function that performs a hyperparameter screeing experiment.
+Pipeline function that performs a hyper-parameter screeing experiment.
 }
 \examples{
 \dontrun{

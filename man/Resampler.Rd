@@ -108,7 +108,7 @@ The default is 500 (integer)}
 \item{\code{fml_method}}{ML model that is being used.
 The default is 'pcr' (character).}
 
-\item{\code{fml_type}}{ML model type. Needs to be 'classfification',
+\item{\code{fml_type}}{ML model type. Needs to be 'classification',
 'regression' or 'censored'.
 Default is 'classification' (character).}
 

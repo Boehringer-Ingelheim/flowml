@@ -20,9 +20,9 @@ a tibble
 Performs item categorization on permutation or shap analysis object
 }
 \details{
-Interpretation results are passed to the function. 
-Based on the type of interpretation experiment the data is transformed into a uniformly structured data frame. 
-Item categorization is performed by computed ABC analysis. 
+Interpretation results are passed to the function.
+Based on the type of interpretation experiment the data is transformed into a uniformly structured data frame.
+Item categorization is performed by computed ABC analysis.
 The result is returned in form of a tibble.
 }
 \author{
