@@ -31,7 +31,9 @@ run_abc_analysis <- function(data_obj, method){
                       dplyr::group_by(Feature) %>%
                       dplyr::select(-id) %>%
                       dplyr::summarise(Importance = mean(abs(Shap)),
-                                       StDev = stats::sd(abs(Shap))))
+                                       StDev = stats::sd(abs(Shap))),
+                    "internal" = dplyr::rename(data_obj, Feature = Variable),
+                    stop(sprintf("Interpretation method %s is unknown. Needs to be permutation shap or internal.", method)))
 
   # perform ABC_analysis
   x <- data_df$Importance

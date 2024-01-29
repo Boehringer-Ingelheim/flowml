@@ -12,16 +12,31 @@
 #' @importFrom fastshap explain
 #' @importFrom caret train trainControl
 #' @importFrom utils read.csv
+#' @importFrom stringr str_equal
 #'
 #' @include fml_parser.R
 #' @include fml_format_response.R
 #' @include fml_categorize.R
 #'
 #' @param parser_inst instance of fml_parser class that comprises command line arguments.
+#' @return none
 #'
 #' @examples
 #' \dontrun{
-#'   flowml::fml_interpret(parser_inst)
+#' parser_inst <-  flowml::create_parser()
+#'
+#' parser_inst$pipeline_segment <- "interpret"
+#' parser_inst$config <- flowml::fml_example(file = "reg_config.json")
+#' parser_inst$data <- flowml::fml_example(file = "reg_data.csv")
+#' parser_inst$samples_train <- flowml::fml_example(file = "reg_samples_train.txt")
+#' parser_inst$samples_test <- flowml::fml_example(file = "reg_samples_test.txt")
+#' parser_inst$features <- flowml::fml_example(file = "reg_features.txt")
+#' parser_inst$extended_features <- flowml::fml_example(file = "reg_features_extended.txt")
+#' parser_inst$trained <- flowml::fml_example(file = "reg_fit.rds")
+#' parser_inst$interpretation <- "shap"
+#' parser_inst$result_dir <- tempdir()
+#'
+#' flowml::fml_interpret(parser_inst = parser_inst)
 #' }
 #'
 #' @export
@@ -29,6 +44,16 @@
 fml_interpret = function(parser_inst){
   # read config
   config_inst <- rjson::fromJSON(file = parser_inst$config)
+
+  # omit default path in writing functions
+  if(!dir.exists(parser_inst$result_dir))
+  {
+    stop(sprintf("result_dir does not exist: %s\n", parser_inst$result_dir))
+  }
+  if(stringr::str_equal(config_inst$fit.id, ""))
+  {
+    stop(sprintf("fit.id is empty\n"))
+  }
 
   # read tuned model
   model_inst <- readRDS(file = parser_inst$trained)
@@ -58,10 +83,19 @@ fml_interpret = function(parser_inst){
   fml_metric <- switch(fml_mode,
                       "regression" = "rmse",
                       "classification" = "accuracy")
+  fml_reference_class <- config_inst$ml.interpret$shap.reference.class
   fml_seed <- as.integer(config_inst$ml.seed)
 
   # run interpretation experiment.
   set.seed(fml_seed)
+
+  pred_shap <- function(model, newdata) {
+    switch(fml_mode,
+           "classification" = {predict(model, newdata = newdata, type = "prob")[[fml_reference_class]]},
+           "regression" = {predict(model, newdata = newdata)}
+    )
+  }
+
   interpret_inst <- switch (parser_inst$interpretation,
                             "permutation" = {
                               vip::vi_permute(object = model_inst,
@@ -78,14 +112,18 @@ fml_interpret = function(parser_inst){
                             "shap" = {
                               fastshap::explain(object = model_inst,
                                                 feature_names = train_features_lst,
-                                                pred_wrapper = predict,
+                                                pred_wrapper = pred_shap,
                                                 nsim = fml_resamples,
                                                 X = as.data.frame(dplyr::select(filtered_df, dplyr::all_of(train_features_lst))),
                                                 newdata = NULL,
                                                 adjust = TRUE) %>%
                                 return()
                             },
-                            stop(sprintf("Interpretation method %s is unknown. Needs to be permutation or shap.", parser_inst$interpretation))
+                            "internal" = {
+                              vip::vi_model(object = model_inst) %>%
+                                return()
+                            },
+                            stop(sprintf("Interpretation method %s is unknown. Needs to be permutation shap or internal.", parser_inst$interpretation))
   )
 
   # perform item categorization

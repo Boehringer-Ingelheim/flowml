@@ -16,7 +16,7 @@
 #' @importFrom tidyr unnest
 #' @importFrom readr write_csv
 #' @importFrom caret train trainControl
-#' @importFrom stringr str_flatten
+#' @importFrom stringr str_flatten str_equal
 #' @importFrom rlang :=
 #' @importFrom utils read.csv write.table
 #'
@@ -30,7 +30,20 @@
 #'
 #' @examples
 #' \dontrun{
-#'   flowml::fml_bootstrap(parser_inst)
+#' parser_inst <-  flowml::create_parser()
+#'
+#' parser_inst$pipeline_segment <- "bootstrap"
+#' parser_inst$config <- flowml::fml_example(file = "reg_config.json")
+#' parser_inst$data <- flowml::fml_example(file = "reg_data.csv")
+#' parser_inst$samples_train <- flowml::fml_example(file = "reg_samples_train.txt")
+#' parser_inst$samples_test <- flowml::fml_example(file = "reg_samples_test.txt")
+#' parser_inst$features <- flowml::fml_example(file = "reg_features.txt")
+#' parser_inst$extended_features <- flowml::fml_example(file = "reg_features_extended.txt")
+#' parser_inst$trained <- flowml::fml_example(file = "reg_fit.rds")
+#' parser_inst$permutation <- "none"
+#' parser_inst$result_dir <- tempdir()
+#'
+#' flowml::fml_bootstrap(parser_inst = parser_inst)
 #' }
 #'
 #' @export
@@ -39,14 +52,11 @@ fml_bootstrap = function(parser_inst){
   # set up environment for parallel computing
   n_cores <- parallel::detectCores()
   if(parser_inst$cores == 1){
-    print("running sequential")
     future::plan(strategy = "sequential")
   }
   else if(n_cores < parser_inst$cores){
-    print(sprintf("running in parallel on %i cores", n_cores))
     future::plan(strategy = "multisession", workers = n_cores)
   }else{
-    print(sprintf("running in parallel on %i cores", parser_inst$cores))
     future::plan(strategy = "multisession", workers = parser_inst$cores)
   }
 
@@ -55,6 +65,16 @@ fml_bootstrap = function(parser_inst){
 
   # read config
   config_inst <- rjson::fromJSON(file = parser_inst$config)
+
+  # omit default path in writing functions
+  if(!dir.exists(parser_inst$result_dir))
+  {
+    stop(sprintf("result_dir does not exist: %s\n", parser_inst$result_dir))
+  }
+  if(stringr::str_equal(config_inst$fit.id, ""))
+  {
+    stop(sprintf("fit.id is empty\n"))
+  }
 
   # read model
   model_inst <- readRDS(file = parser_inst$trained)
@@ -170,7 +190,5 @@ fml_bootstrap = function(parser_inst){
     rjson::toJSON() %>%
     write(file = file.log)
 
-  # closing remarks
-  cat(sprintf("\n\nRan bootstrap experiment with permutation type %s in %.3f seconds on %i cores.\n%s\n", parser_inst$permutation, run_time, as.numeric(parser_inst$cores), config_inst$note))
 }
 
