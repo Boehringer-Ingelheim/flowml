@@ -35,7 +35,7 @@ main = function(){
   run_time = end_time - start_time
 
   # closing remarks
-  cat(sprintf("\n\nRan %s experiment in flowml in %.3f minutes.\n\n", pipeline_segment, run_time[[3]]/60))
+  message(sprintf("\n\nRan %s experiment in flowml in %.3f minutes.\n\n", pipeline_segment, run_time[[3]]/60))
 }
 
 main()

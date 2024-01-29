@@ -31,7 +31,7 @@ create_parser = function(){
     optparse::make_option("--permutation", type="character", default="none",
                           help="method of permutation experiment. Options are (none, features, response). [default= %default]", metavar="character"),
     optparse::make_option("--interpretation", type="character", default="shap",
-                          help="method for model interpretation. Options are (permutation, shap). [default= %default]", metavar="character"),
+                          help="method for model interpretation. Options are (permutation, shap, internal). [default= %default]", metavar="character"),
     optparse::make_option("--trained", type="character", default = NULL,
                           help = "trained caret object (*.rds).", metavar="character"),
     optparse::make_option("--cores", type="integer", default=1,

@@ -1,7 +1,7 @@
 Package: flowml
 Type: Package
 Title: A Backend for a 'nextflow' Pipeline that Performs Machine-Learning-Based Modeling of Biomedical Data
-Version: 0.1.1
+Version: 0.1.3
 Authors@R: c(
     person("Sebastian", "Malkusch",
       email = "sebastian.malkusch@boehringer-ingelheim.com",
@@ -29,7 +29,7 @@ Authors@R: c(
     )
   )
 Maintainer: Sebastian Malkusch <sebastian.malkusch@boehringer-ingelheim.com>
-Description: The 'flowml'-package presents a set of methods that perform machine-learning-based modeling.
+Description: Provides functionality to perform machine-learning-based modeling in a computation pipeline.
     Its functions contain the basic steps of machine-learning-based knowledge discovery workflows,
     including model training and optimization, model evaluation, and model testing.
     To perform these tasks, the package builds heavily on existing machine-learning packages,
@@ -46,7 +46,6 @@ Description: The 'flowml'-package presents a set of methods that perform machine
     standardization, and re-producibility in the context of machine-learning.
 License: GPL (>= 3)
 Encoding: UTF-8
-LazyData: true
 URL: https://github.com/Boehringer-Ingelheim/flowml
 BugReports: https://github.com/Boehringer-Ingelheim/flowml/issues
 Imports: 
@@ -80,6 +79,7 @@ Collate:
     'fml_parser.R'
     'fml_bootstrap.R'
     'fml_categorize.R'
+    'fml_example.R'
     'fml_globals.R'
     'fml_grids.R'
     'fml_interpret.R'
@@ -155,3 +155,5 @@ Suggests:
     vbmp,
     VGAM,
     xgboost
+Depends:
+    R (>= 3.5.0)
